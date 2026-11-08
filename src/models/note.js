@@ -11,6 +11,7 @@ const noteSchema = new Schema(
     content: {
       type: String,
       default: '',
+      required: false,
       trim: true,
     },
     tag: {
@@ -22,6 +23,6 @@ const noteSchema = new Schema(
   { timestamps: true, versionKey: false },
 );
 
-noteSchema.index({ tags: 1 });
+noteSchema.index({ tag: 1 });
 
 export const Note = model('Note', noteSchema, 'notes');
