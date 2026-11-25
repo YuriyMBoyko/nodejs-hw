@@ -61,9 +61,9 @@ export const logoutUser = async (req, res) => {
     await Session.deleteOne({ _id: sessionId });
   }
 
-  res.clearCookies('sessionId', SESSION_COOKIE_OPTIONS);
-  res.clearCookies('accessToken', SESSION_COOKIE_OPTIONS);
-  res.clearCookies('refreshToken', SESSION_COOKIE_OPTIONS);
+  res.clearCookie('sessionId', SESSION_COOKIE_OPTIONS);
+  res.clearCookie('accessToken', SESSION_COOKIE_OPTIONS);
+  res.clearCookie('refreshToken', SESSION_COOKIE_OPTIONS);
 
   res.status(204).send();
 };
@@ -85,14 +85,14 @@ export const refreshUserSession = async (req, res) => {
     createHttpError(401, SESSION_NOT_FOUND);
   }
 
-  const isRefreshTokenValid = (session.refreshTokenValidUntil < new Date());
+//  const isRefreshTokenValid = (session.refreshTokenValidUntil <= new Date());
 
   if (!session.refreshTokenValidUntil.getTime() <= Date.now()) {
     await session.deleteOne();
 
-    res.clearCookies('sessionId', SESSION_COOKIE_OPTIONS);
-    res.clearCookies('accessToken', SESSION_COOKIE_OPTIONS);
-    res.clearCookies('refreshToken', SESSION_COOKIE_OPTIONS);
+    res.clearCookie('sessionId', SESSION_COOKIE_OPTIONS);
+    res.clearCookie('accessToken', SESSION_COOKIE_OPTIONS);
+    res.clearCookie('refreshToken', SESSION_COOKIE_OPTIONS);
 
     throw createHttpError(401, 'Session token expired');
   }
