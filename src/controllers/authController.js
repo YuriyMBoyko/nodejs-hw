@@ -82,12 +82,12 @@ export const refreshUserSession = async (req, res) => {
 
   const session = await Session.findOne({ _id: sessionId, refreshToken });
   if (!session) {
-    createHttpError(401, SESSION_NOT_FOUND);
+    throw createHttpError(401, SESSION_NOT_FOUND);
   }
 
-//  const isRefreshTokenValid = (session.refreshTokenValidUntil <= new Date());
+  const isRefreshTokenValid = (session.refreshTokenValidUntil <= new Date());
 
-  if (!session.refreshTokenValidUntil.getTime() <= Date.now()) {
+  if (!isRefreshTokenValid) {
     await session.deleteOne();
 
     res.clearCookie('sessionId', SESSION_COOKIE_OPTIONS);
@@ -96,11 +96,13 @@ export const refreshUserSession = async (req, res) => {
 
     throw createHttpError(401, 'Session token expired');
   }
-
+/*
   const { deletedCount } = await session.deleteOne();
   if (deletedCount === 0) {
     throw createHttpError(401, SESSION_NOT_FOUND);
   }
+*/
+  await session.deleteOne();
 
   const newSession = await createSession(session.userId);
   setSessionCookies(res, newSession);

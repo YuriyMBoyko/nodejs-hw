@@ -14,8 +14,8 @@ export const createSession = async (userId) => {
 
   return Session.create({
     userId,
-    accessToken: crypto.randomUUID().toString('base64url'),
-    refreshToken: crypto.randomUUID().toString('base64url'),
+    accessToken: crypto.randomUUID(),
+    refreshToken: crypto.randomUUID(),
     accessTokenValidUntil: new Date(now + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(now + ONE_DAY),
   });
