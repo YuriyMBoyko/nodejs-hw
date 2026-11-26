@@ -85,9 +85,9 @@ export const refreshUserSession = async (req, res) => {
     throw createHttpError(401, SESSION_NOT_FOUND);
   }
 
-  const isRefreshTokenValid = (session.refreshTokenValidUntil <= new Date());
+  const isRefreshTokenExpired = (session.refreshTokenValidUntil < new Date());
 
-  if (!isRefreshTokenValid) {
+  if (isRefreshTokenExpired) {
     await session.deleteOne();
 
     res.clearCookie('sessionId', SESSION_COOKIE_OPTIONS);
